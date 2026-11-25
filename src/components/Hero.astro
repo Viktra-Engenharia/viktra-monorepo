@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import heroImage from '../assets/images/rooftop-hero.png';
-import logoPlaceholder from '../assets/images/placeholder-red.jpg';
+import logoUrl from '../assets/logo/white-logo-with-triangle.svg?url';
 import { getWhatsAppUrl } from '../data/site';
 
 const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
@@ -18,10 +18,7 @@ const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
   />
   <div class="hero__overlay" aria-hidden="true"></div>
   <div class="hero__content container">
-    <!-- TODO(conteudo): substituir pelo logo SVG exportado do Canva. -->
-    <div class="hero__logo" role="img" aria-label="Logotipo da Viktra pendente de exportação.">
-      <Image src={logoPlaceholder} alt="" format="webp" />
-    </div>
+    <img class="hero__logo" src={logoUrl} alt="Viktra" width="1137" height="185" />
     <h1 class="hero__title" id="hero-title">LIBERDADE É PRODUZIR A PRÓPRIA ENERGIA</h1>
     <a class="hero__cta" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
       Fale Conosco
@@ -68,15 +65,8 @@ const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
 
   .hero__logo {
     width: min(78vw, 36rem);
-    aspect-ratio: 5.65;
+    height: auto;
     margin-bottom: var(--space-5);
-    overflow: hidden;
-  }
-
-  .hero__logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 
   .hero__title {
