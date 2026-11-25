@@ -1,0 +1,245 @@
+---
+import { site } from '../data/site';
+
+const locations = Array.from({ length: 8 }, (_, index) => index + 1);
+---
+
+<section class="where" aria-labelledby="where-title">
+  <div class="container where__layout">
+    <div class="where__content">
+      <header class="where__intro">
+        <h2 class="where__title" id="where-title">Onde estamos?</h2>
+        <p class="where__coverage">{site.coverageStatement}</p>
+      </header>
+
+      <section class="where__locations" aria-labelledby="where-locations-title">
+        <h3 class="where__locations-title" id="where-locations-title">
+          Locais onde pode nos ver:
+        </h3>
+        <ul class="where__locations-grid">
+          {
+            locations.map((location) => (
+              <li class="where__location">
+                <svg
+                  class="where__location-icon"
+                  viewBox="0 0 48 48"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path d="M8 21h32v20H8zM5 21l4-12h30l4 12M15 41V29h9v12m5-12h6v6h-6z" />
+                </svg>
+                <span>TODO(conteudo)</span>
+                <span class="visually-hidden">: logo do local {location}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+
+    <div class="where__map-wrap">
+      <svg
+        class="where__map"
+        viewBox="0 0 320 360"
+        role="img"
+        aria-labelledby="brazil-map-title brazil-map-desc"
+      >
+        <title id="brazil-map-title">Mapa esquemático do Brasil</title>
+        <desc id="brazil-map-desc">
+          Representação simplificada do Brasil com Goiás destacado em preto e São Paulo em laranja.
+        </desc>
+        <path
+          class="where__map-outline"
+          d="M78 20 95 25 107 17 124 25 138 19 154 29 168 20 179 28 193 21 205 31 217 25 228 36 241 33 253 43 262 42 273 54 283 58 287 72 298 79 294 93 305 105 297 117 302 130 293 143 299 153 287 164 289 178 279 188 284 204 274 213 270 230 259 237 255 253 243 264 237 281 221 289 213 306 198 311 188 326 171 329 159 343 147 335 136 341 124 330 110 327 100 314 84 310 76 296 62 291 55 275 43 269 40 251 31 242 34 225 24 214 28 197 19 185 26 170 20 158 30 145 24 131 34 119 28 104 39 92 36 79 49 69 44 55 56 48 57 35 70 31Z"
+        />
+        <path
+          class="where__state where__state--go"
+          d="m166 171 25 2 12 13-3 20-13 12-24-3-10-14 3-19z"
+        />
+        <path
+          class="where__state where__state--sp"
+          d="m175 220 24-2 17 12-4 17-17 8-24-4-10-13z"
+        />
+        <text class="where__map-label where__map-label--go" x="178" y="200">GO</text>
+        <text class="where__map-label where__map-label--sp" x="184" y="242">SP</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .where {
+    padding-block: var(--space-8);
+  }
+
+  .where__layout {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  .where__content {
+    min-width: 0;
+  }
+
+  .where__intro {
+    display: flex;
+    margin-bottom: var(--space-6);
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .where__title {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0;
+    padding: var(--space-4) var(--space-5);
+    background-color: var(--color-navy);
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .where__coverage {
+    width: min(100% - var(--space-5), 20rem);
+    margin: calc(-1 * var(--space-3)) 0 0 auto;
+    padding: var(--space-5);
+    background-color: var(--color-orange);
+    color: var(--color-white);
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .where__locations-title {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .where__locations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .where__location {
+    display: flex;
+    min-width: 0;
+    min-height: 6rem;
+    padding: var(--space-2);
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-1);
+    border: 1px solid rgb(14 30 72 / 22%);
+    background-color: var(--color-white);
+    color: var(--color-navy);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .where__location-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-orange);
+  }
+
+  .where__map-wrap {
+    display: grid;
+    min-width: 0;
+    place-items: center;
+  }
+
+  .where__map {
+    width: min(100%, 25rem);
+    height: auto;
+  }
+
+  .where__map-outline {
+    fill: var(--color-bg);
+    stroke: var(--color-navy);
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+  }
+
+  .where__state--go {
+    fill: black;
+    stroke: var(--color-bg);
+    stroke-width: 1;
+  }
+
+  .where__state--sp {
+    fill: var(--color-orange);
+    stroke: var(--color-bg);
+    stroke-width: 1;
+  }
+
+  .where__map-label {
+    fill: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    text-anchor: middle;
+  }
+
+  @media (min-width: 640px) {
+    .where__intro {
+      min-height: 11rem;
+      margin-bottom: var(--space-6);
+      display: block;
+    }
+
+    .where__title {
+      width: 58%;
+      min-height: 9rem;
+      padding: var(--space-5);
+      text-align: center;
+    }
+
+    .where__coverage {
+      position: relative;
+      width: 58%;
+      min-height: 8rem;
+      margin: -4rem 0 0 auto;
+      padding: var(--space-6) var(--space-5) var(--space-4);
+    }
+
+    .where__locations-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    .where__location {
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .where__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-7);
+    }
+
+    .where__map {
+      width: min(100%, 31rem);
+    }
+  }
+</style>
