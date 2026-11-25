@@ -1,16 +1,15 @@
 ---
+import Hero from '../components/Hero.astro';
+import Etapas from '../components/Etapas.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Viktra | Energia solar e soluções elétricas em São Carlos"
+  description="Conheça a Viktra, empresa de energia solar, elétrica e sistemas de bateria em São Carlos, SP."
+>
+  <main>
+    <Hero />
+    <Etapas />
+  </main>
+</BaseLayout>

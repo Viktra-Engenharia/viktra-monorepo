@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO(conteudo): atualizar a URL quando o domínio oficial for confirmado.
+Sitemap: https://viktra.com.br/sitemap-index.xml
