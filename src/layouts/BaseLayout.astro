@@ -1,6 +1,7 @@
 ---
 import '@fontsource/oswald/700.css';
 import '@fontsource/montserrat/400.css';
+import '@fontsource/montserrat/700.css';
 import '../styles/global.css';
 
 import { site } from '../data/site';
@@ -67,5 +68,9 @@ const structuredData = {
   </head>
   <body>
     <slot />
+    <script>
+      import { initClickTracking } from '../lib/track';
+      initClickTracking();
+    </script>
   </body>
 </html>
