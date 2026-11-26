@@ -144,6 +144,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
   @media (max-width: 639.98px) {
     .hero {
       min-height: max(36rem, 100svh);
+      padding-block: var(--space-6) var(--space-5);
     }
 
     /* Logo + kicker sit as a tight pair in the upper area; title block stays centred below. */
@@ -152,7 +153,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     }
 
     .hero__logo {
-      margin-top: clamp(var(--space-4), 8svh, var(--space-8));
+      margin-top: clamp(var(--space-2), 3svh, var(--space-5));
       margin-bottom: var(--space-2);
     }
 
@@ -163,7 +164,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     /* Buttons drop toward the bottom (thumb zone), leaving a small gap above the fold. */
     .hero__actions {
       margin-top: auto;
-      margin-bottom: clamp(var(--space-2), 4svh, var(--space-6));
+      margin-bottom: clamp(0rem, 1.5svh, var(--space-4));
     }
 
     .hero__lead-more {
@@ -393,7 +394,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     }
 
     .hero__actions {
-      margin-top: clamp(var(--space-6), 6vh, 4.5rem);
+      margin-top: clamp(var(--space-7), 12vh, 8rem);
       justify-content: center;
     }
 
