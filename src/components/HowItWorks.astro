@@ -1,0 +1,230 @@
+---
+import WhatsAppIcon from './icons/WhatsAppIcon.astro';
+import { steps } from '../data/steps';
+import { getWhatsAppCtaUrl } from '../data/site';
+
+const whatsappUrl = getWhatsAppCtaUrl('how-it-works');
+---
+
+<section class="how" aria-labelledby="how-title">
+  <div class="container">
+    <h2 class="section-title" id="how-title">Como funciona</h2>
+    <p class="how__intro">Do primeiro contato à conta mais baixa, a Viktra cuida de tudo.</p>
+
+    <ol class="how__list">
+      {
+        steps.map((step, index) => (
+          <li class:list={['how__item', { 'how__item--highlight': step.icon === 'savings' }]}>
+            <div class="how__badge">
+              <svg
+                class="how__icon"
+                viewBox="0 0 64 64"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                {step.icon === 'budget' && (
+                  <g>
+                    <path d="M17 8h22l9 9v38H17z" />
+                    <path d="M39 8v10h9M23 27h19M23 34h11M23 41h7" />
+                    <rect x="35" y="34" width="16" height="16" rx="1" />
+                    <path d="M39 38h2m4 0h2m-8 4h2m4 0h2m-8 4h2m4 0h2" />
+                  </g>
+                )}
+                {step.icon === 'inspection' && (
+                  <g>
+                    <path d="M8 29 34 17l16 5-3 5-13-2-9 5 17 7 11-2 2 5-14 7-25-8-8 4-5-8z" />
+                    <circle cx="34" cy="31" r="7" />
+                    <path d="m31 31 2 2 4-5" />
+                  </g>
+                )}
+                {step.icon === 'project' && (
+                  <g>
+                    <path d="M12 9h30v45H12zM19 18h16M19 25h10" />
+                    <path d="m28 42 17-17 6 6-17 17-8 2zM42 28l6 6" />
+                    <path d="M18 54h35" />
+                  </g>
+                )}
+                {step.icon === 'installation' && (
+                  <g>
+                    <circle cx="45" cy="15" r="7" />
+                    <path d="M45 3v4m0 16v4M33 15h4m16 0h4m-20-8 3 3m11 11 3 3m0-17-3 3" />
+                    <path d="m9 33 4-14h26l4 14zM13 25h28M22 19l-3 14m11-14 3 14M7 39h40l4 13H3zM20 39l-2 13m17-13 2 13" />
+                  </g>
+                )}
+                {step.icon === 'savings' && (
+                  <g>
+                    <circle cx="42" cy="15" r="9" />
+                    <path d="M42 10v10m3-8h-4a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-4M7 37h15l8 5h14a4 4 0 0 1 0 8H29l-9-3H7z" />
+                    <path d="M7 37v15m0-15h-3v15h3m12-6 10 3" />
+                  </g>
+                )}
+              </svg>
+            </div>
+            <div class="how__text">
+              <h3 class="how__title">
+                <span class="how__number">{index + 1}.</span> {step.title}
+              </h3>
+              <p class="how__description">{step.description}</p>
+              {step.leadTime && <p class="how__lead-time">Prazo: {step.leadTime}</p>}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="how__actions">
+      <a
+        class="btn-whatsapp"
+        href={whatsappUrl}
+        data-track="whatsapp_click"
+        data-track-location="how-it-works"
+      >
+        <WhatsAppIcon />
+        Começar pelo orçamento no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how {
+    --badge-size: 4.5rem;
+
+    padding-block: var(--space-8);
+    background-color: var(--color-white);
+  }
+
+  .how__intro {
+    max-width: 40ch;
+    margin: var(--space-4) 0 var(--space-7);
+  }
+
+  .how__list {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Vertical timeline line joining each badge to the next one on mobile. */
+  .how__item:not(:last-child)::before {
+    position: absolute;
+    top: var(--badge-size);
+    bottom: calc(-1 * var(--space-6));
+    left: calc(var(--badge-size) / 2 - 0.25rem);
+    width: 0.5rem;
+    background-color: var(--color-orange);
+    content: "";
+  }
+
+  .how__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--badge-size) 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .how__badge {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: var(--badge-size);
+    height: var(--badge-size);
+    place-items: center;
+    background-color: var(--color-orange);
+    color: var(--color-white);
+  }
+
+  .how__item--highlight .how__badge {
+    background-color: var(--color-navy);
+  }
+
+  .how__icon {
+    width: 70%;
+    height: 70%;
+  }
+
+  .how__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .how__number {
+    color: var(--color-navy);
+  }
+
+  .how__description {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+  }
+
+  .how__lead-time {
+    display: inline-block;
+    margin: var(--space-2) 0 0;
+    padding: var(--space-1) var(--space-2);
+    background-color: var(--color-navy);
+    color: var(--color-white);
+    font-size: var(--text-xs);
+    font-weight: 700;
+  }
+
+  .how__actions {
+    margin-top: var(--space-7);
+  }
+
+  .how__actions .btn-whatsapp {
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .how__actions .btn-whatsapp {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .how {
+      --badge-size: 7rem;
+    }
+
+    .how__list {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+
+    .how__item:not(:last-child)::before {
+      content: none;
+    }
+
+    /* The mockup's horizontal orange band behind the cards. */
+    .how__list::before {
+      position: absolute;
+      top: calc(var(--badge-size) / 2 - 0.5rem);
+      right: 0;
+      left: 0;
+      height: 1rem;
+      background-color: var(--color-orange);
+      content: "";
+    }
+
+    .how__item {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .how__actions {
+      text-align: center;
+    }
+  }
+</style>

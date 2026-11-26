@@ -50,8 +50,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     isolation: isolate;
     display: grid;
     min-height: 36rem;
-    /* Bottom padding leaves room for the steps strip that overlaps the hero. */
-    padding: var(--space-7) 0 8rem;
+    padding: var(--space-7) 0;
     place-items: center;
     overflow: hidden;
     background-color: var(--color-navy);
@@ -150,7 +149,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
   @media (min-width: 768px) {
     .hero {
       min-height: clamp(40rem, 58vw, 50rem);
-      padding-block: var(--space-8) 10rem;
+      padding-block: var(--space-8);
     }
 
     .hero__content {
