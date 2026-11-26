@@ -4,6 +4,7 @@ import '@fontsource/montserrat/400.css';
 import '@fontsource/montserrat/700.css';
 import '../styles/global.css';
 
+import { getAnsweredFaq } from '../data/faq';
 import { site } from '../data/site';
 
 interface Props {
@@ -17,8 +18,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
 // TODO(conteudo): replace this placeholder with the approved 1200x630 brand artwork.
 const socialImageUrl = new URL('/og-image.png', siteUrl);
 
-const structuredData = {
-  '@context': 'https://schema.org',
+const answeredFaq = getAnsweredFaq();
+
+const localBusiness = {
   '@type': 'LocalBusiness',
   name: site.name,
   url: site.url,
@@ -36,6 +38,20 @@ const structuredData = {
     '@type': 'AdministrativeArea',
     name: area,
   })),
+};
+
+const faqPage = {
+  '@type': 'FAQPage',
+  mainEntity: answeredFaq.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': answeredFaq.length > 0 ? [localBusiness, faqPage] : [localBusiness],
 };
 ---
 
