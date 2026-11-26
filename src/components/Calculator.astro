@@ -5,11 +5,6 @@ import { getWhatsAppCtaUrl } from '../data/site';
 
 const { regions, connectionTypes } = calculatorConfig;
 const fallbackWhatsappUrl = getWhatsAppCtaUrl('calculator');
-const showDraftNotice = !calculatorConfig.validated && import.meta.env.DEV;
-
-if (!calculatorConfig.validated && import.meta.env.PROD) {
-  console.warn('[Calculator] calculatorConfig.validated is false: parameters are placeholders.');
-}
 ---
 
 <section class="calculator" id="simulador" aria-labelledby="calculator-title">
@@ -19,14 +14,6 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
       <p class="calculator__intro">
         Responda 3 perguntas e veja uma estimativa na hora, sem cadastro.
       </p>
-
-      {
-        showDraftNotice && (
-          <p class="calculator__draft">
-            TODO(conteudo): parâmetros de exemplo — validar com a engenharia antes de publicar.
-          </p>
-        )
-      }
 
       <form class="calculator__form" action="#simulador" novalidate data-calculator>
         <div class="calculator__field">
@@ -284,13 +271,6 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
   .calculator__intro {
     max-width: 40ch;
     margin: var(--space-4) 0 var(--space-6);
-  }
-
-  .calculator__draft {
-    margin: 0 0 var(--space-5);
-    padding: var(--space-3) var(--space-4);
-    border: 2px dashed var(--color-orange);
-    font-size: var(--text-sm);
   }
 
   .calculator__form {
