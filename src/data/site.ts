@@ -6,7 +6,6 @@ export const site = {
   contact: {
     // TODO(conteudo): confirmar se há um ou dois números de WhatsApp.
     whatsappNumber: '+55 (16) 98163-9383',
-    // TODO(conteudo): confirmar o @ real; handles do Instagram não aceitam acento ("ã").
     instagramHandle: '@viktra.sc',
     instagramUrl: 'https://www.instagram.com/viktra.sc/',
     email: 'contato@viktra.com.br',

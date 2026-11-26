@@ -36,8 +36,17 @@ export interface CalculatorConfig {
    * low impact today, so it defaults to 0 and no page copy is built around it.
    */
   fioBShare: number;
+  /**
+   * Share of the ideal savings the client actually sees (tariff flags, seasonal consumption,
+   * public lighting fee, etc.). Range → savings range.
+   */
+  savingsRealization: Range;
   /** Bill limits accepted by the form, in R$. */
   billLimits: Range;
+  /** Connection type assumed when the visitor answers "Não sei". */
+  defaultConnection: ConnectionType;
+  /** Set to true only after the engineers validate the parameters against real proposals. */
+  validated: boolean;
 }
 
 export const calculatorConfig: CalculatorConfig = {
@@ -76,5 +85,8 @@ export const calculatorConfig: CalculatorConfig = {
   pricePerKwp: { min: 3000, max: 4500 },
   panelPowerWp: 550,
   fioBShare: 0,
+  savingsRealization: { min: 0.85, max: 0.95 },
   billLimits: { min: 100, max: 50000 },
+  defaultConnection: 'bi',
+  validated: false,
 };

@@ -1,0 +1,475 @@
+---
+import WhatsAppIcon from './icons/WhatsAppIcon.astro';
+import { calculatorConfig } from '../data/calculator';
+import { getWhatsAppCtaUrl } from '../data/site';
+
+const { regions, connectionTypes } = calculatorConfig;
+const fallbackWhatsappUrl = getWhatsAppCtaUrl('calculator');
+const showDraftNotice = !calculatorConfig.validated && import.meta.env.DEV;
+
+if (!calculatorConfig.validated && import.meta.env.PROD) {
+  console.warn('[Calculator] calculatorConfig.validated is false: parameters are placeholders.');
+}
+---
+
+<section class="calculator" id="simulador" aria-labelledby="calculator-title">
+  <div class="container calculator__inner">
+    <div class="calculator__main">
+      <h2 class="section-title" id="calculator-title">Quanto você pode economizar?</h2>
+      <p class="calculator__intro">
+        Responda 3 perguntas e veja uma estimativa na hora, sem cadastro.
+      </p>
+
+      {
+        showDraftNotice && (
+          <p class="calculator__draft">
+            TODO(conteudo): parâmetros de exemplo — validar com a engenharia antes de publicar.
+          </p>
+        )
+      }
+
+      <form class="calculator__form" action="#simulador" novalidate data-calculator>
+        <div class="calculator__field">
+          <label class="calculator__label" for="calculator-bill">
+            Valor médio da sua conta de luz
+          </label>
+          <div class="calculator__money">
+            <span class="calculator__currency" aria-hidden="true">R$</span>
+            <input
+              class="calculator__input"
+              id="calculator-bill"
+              name="bill"
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              placeholder="Ex.: 450"
+              required
+              aria-describedby="calculator-bill-hint calculator-bill-error"
+            />
+          </div>
+          <p class="calculator__hint" id="calculator-bill-hint">
+            Se o valor varia, use a média dos últimos meses.
+          </p>
+          <p class="calculator__error" id="calculator-bill-error" data-bill-error></p>
+        </div>
+
+        <div class="calculator__field">
+          <label class="calculator__label" for="calculator-region">Onde fica o imóvel?</label>
+          <select class="calculator__input" id="calculator-region" name="region">
+            {regions.map((region) => <option value={region.id}>{region.label}</option>)}
+          </select>
+        </div>
+
+        <fieldset class="calculator__field calculator__fieldset">
+          <legend class="calculator__label">Tipo de ligação</legend>
+          <p class="calculator__hint">Aparece na sua conta de luz.</p>
+          <div class="calculator__options">
+            {
+              Object.entries(connectionTypes).map(([value, { label }]) => (
+                <label class="calculator__option">
+                  <input type="radio" name="connection" value={value} />
+                  {label}
+                </label>
+              ))
+            }
+            <label class="calculator__option">
+              <input type="radio" name="connection" value="unknown" checked />
+              Não sei
+            </label>
+          </div>
+        </fieldset>
+
+        <button class="calculator__submit" type="submit">Ver minha economia</button>
+      </form>
+
+      <noscript>
+        <p class="calculator__noscript">
+          A simulação precisa de JavaScript. Se preferir, fale direto com a gente:
+        </p>
+        <a class="btn-whatsapp" href={fallbackWhatsappUrl}>
+          <WhatsAppIcon />
+          Pedir orçamento no WhatsApp
+        </a>
+      </noscript>
+    </div>
+
+    <div class="calculator__result" data-result hidden>
+      <h3 class="calculator__result-title" tabindex="-1" data-result-title>Sua estimativa</h3>
+      <p class="calculator__empty" data-result-empty hidden>
+        Com esse valor de conta, a economia seria pequena. Fale com a gente para avaliar o seu caso.
+      </p>
+      <dl class="calculator__figures" data-result-figures>
+        <div class="calculator__figure calculator__figure--main">
+          <dt>Economia por mês</dt>
+          <dd data-out="monthly"></dd>
+        </div>
+        <div class="calculator__figure">
+          <dt>Economia por ano</dt>
+          <dd data-out="yearly"></dd>
+        </div>
+        <div class="calculator__figure">
+          <dt>Sistema sugerido</dt>
+          <dd data-out="system"></dd>
+        </div>
+        <div class="calculator__figure">
+          <dt>Retorno do investimento</dt>
+          <dd data-out="payback"></dd>
+        </div>
+      </dl>
+      <p class="calculator__disclaimer">
+        Estimativa aproximada, sem compromisso. O valor final depende de vistoria técnica e do projeto
+        do seu imóvel.
+      </p>
+      <a
+        class="btn-whatsapp calculator__cta"
+        href={fallbackWhatsappUrl}
+        data-result-cta
+        data-track="whatsapp_click"
+        data-track-location="calculator"
+      >
+        <WhatsAppIcon />
+        Receber proposta detalhada no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { calculatorConfig, type ConnectionType, type Range } from '../data/calculator';
+  import { getWhatsAppUrl, whatsappMessages } from '../data/site';
+  import { estimate, parseBill } from '../lib/calculator';
+  import { track } from '../lib/track';
+
+  const form = document.querySelector<HTMLFormElement>('[data-calculator]');
+  const result = document.querySelector<HTMLElement>('[data-result]');
+
+  if (form && result) {
+    const billInput = form.querySelector<HTMLInputElement>('#calculator-bill')!;
+    const billError = form.querySelector<HTMLElement>('[data-bill-error]')!;
+    const resultTitle = result.querySelector<HTMLElement>('[data-result-title]')!;
+    const resultEmpty = result.querySelector<HTMLElement>('[data-result-empty]')!;
+    const resultFigures = result.querySelector<HTMLElement>('[data-result-figures]')!;
+    const resultCta = result.querySelector<HTMLAnchorElement>('[data-result-cta]')!;
+    const output = (name: string) => result.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
+
+    const money = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      maximumFractionDigits: 0,
+    });
+    const decimal = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
+
+    const roundTo10 = (value: number) => Math.round(value / 10) * 10;
+    const formatRange = (range: Range, format: (value: number) => string, unit = '') => {
+      const min = format(range.min);
+      const max = format(range.max);
+      return min === max ? `${min}${unit}` : `${min} a ${max}${unit}`;
+    };
+    const moneyRange = (range: Range) => formatRange(range, (value) => money.format(roundTo10(value)));
+
+    let started = false;
+    form.addEventListener('input', () => {
+      if (started) return;
+      started = true;
+      track('calculator_start');
+    });
+
+    billInput.addEventListener('input', () => {
+      if (billInput.getAttribute('aria-invalid') === 'true') setBillError('');
+    });
+
+    function setBillError(message: string) {
+      billError.textContent = message;
+      billInput.setAttribute('aria-invalid', String(Boolean(message)));
+    }
+
+    form.addEventListener('submit', (submitEvent) => {
+      submitEvent.preventDefault();
+
+      const { min, max } = calculatorConfig.billLimits;
+      const bill = parseBill(billInput.value);
+      if (Number.isNaN(bill)) {
+        setBillError('Informe o valor da conta em reais, por exemplo: 450.');
+        billInput.focus();
+        return;
+      }
+      if (bill < min || bill > max) {
+        setBillError(
+          `Informe um valor entre ${money.format(min)} e ${money.format(max)}. Para contas maiores, fale com a gente no WhatsApp.`,
+        );
+        billInput.focus();
+        return;
+      }
+      setBillError('');
+
+      const data = new FormData(form);
+      const regionId = String(data.get('region'));
+      const connectionValue = String(data.get('connection'));
+      const connection: ConnectionType =
+        connectionValue in calculatorConfig.connectionTypes
+          ? (connectionValue as ConnectionType)
+          : calculatorConfig.defaultConnection;
+
+      const figures = estimate({ bill, regionId, connection }, calculatorConfig);
+      if (!figures) return;
+
+      const region = calculatorConfig.regions.find((item) => item.id === regionId);
+      const connectionLabel =
+        connectionValue === 'unknown'
+          ? 'Não sei'
+          : calculatorConfig.connectionTypes[connection].label;
+      const hasSavings = figures.monthlySavings.max >= 10;
+
+      resultEmpty.hidden = hasSavings;
+      resultFigures.hidden = !hasSavings;
+
+      const monthly = moneyRange(figures.monthlySavings);
+      const system = formatRange(figures.powerKwp, (value) => decimal.format(value), ' kWp');
+
+      if (hasSavings) {
+        output('monthly').textContent = monthly;
+        output('yearly').textContent = moneyRange(figures.yearlySavings);
+        output('system').textContent =
+          `${system} (${formatRange(figures.panels, String)} painéis)`;
+        output('payback').textContent = Number.isFinite(figures.paybackYears.max)
+          ? formatRange(figures.paybackYears, (value) => decimal.format(value), ' anos')
+          : '—';
+      }
+
+      const lines = [
+        whatsappMessages.calculator,
+        '',
+        `• Conta média: ${money.format(bill)}`,
+        `• Região: ${region?.label ?? regionId}`,
+        `• Ligação: ${connectionLabel}`,
+      ];
+      if (hasSavings) {
+        lines.push(`• Estimativa do site: economia de ${monthly}/mês, sistema de ${system}`);
+      }
+      resultCta.href = getWhatsAppUrl(lines.join('\n'));
+
+      result.hidden = false;
+      resultTitle.focus();
+      track('calculator_result', { region: regionId, connection: connectionValue, hasSavings });
+    });
+  }
+</script>
+
+<style>
+  .calculator {
+    padding-block: var(--space-8);
+  }
+
+  .calculator__inner {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  .calculator__intro {
+    max-width: 40ch;
+    margin: var(--space-4) 0 var(--space-6);
+  }
+
+  .calculator__draft {
+    margin: 0 0 var(--space-5);
+    padding: var(--space-3) var(--space-4);
+    border: 2px dashed var(--color-orange);
+    font-size: var(--text-sm);
+  }
+
+  .calculator__form {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 32rem;
+  }
+
+  .calculator__field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .calculator__fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .calculator__label {
+    padding: 0;
+    font-weight: 700;
+  }
+
+  .calculator__hint {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+
+  .calculator__error {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .calculator__error:empty {
+    display: none;
+  }
+
+  .calculator__error::before {
+    content: "⚠ ";
+    color: var(--color-orange);
+  }
+
+  .calculator__money {
+    position: relative;
+  }
+
+  .calculator__currency {
+    position: absolute;
+    top: 50%;
+    left: var(--space-4);
+    font-weight: 700;
+    transform: translateY(-50%);
+  }
+
+  .calculator__input {
+    width: 100%;
+    min-height: 3rem;
+    padding: var(--space-2) var(--space-4);
+    border: 2px solid var(--color-navy);
+    border-radius: 0;
+    background-color: var(--color-white);
+    color: var(--color-navy);
+  }
+
+  .calculator__money .calculator__input {
+    padding-left: 3rem;
+  }
+
+  .calculator__input[aria-invalid="true"] {
+    border-color: var(--color-orange);
+    outline: 2px solid var(--color-orange);
+  }
+
+  .calculator__options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+
+  .calculator__option {
+    display: flex;
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-3);
+    align-items: center;
+    gap: var(--space-2);
+    border: 2px solid var(--color-navy);
+    background-color: var(--color-white);
+    cursor: pointer;
+  }
+
+  .calculator__option:has(:checked) {
+    background-color: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .calculator__option:has(:focus-visible) {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 2px;
+  }
+
+  .calculator__option input {
+    accent-color: var(--color-orange);
+  }
+
+  .calculator__submit {
+    min-height: 3rem;
+    padding: var(--space-3) var(--space-6);
+    border: 0;
+    background-color: var(--color-navy);
+    color: var(--color-white);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .calculator__submit:hover {
+    background-color: var(--color-orange);
+    color: var(--color-navy);
+  }
+
+  .calculator__noscript {
+    margin: var(--space-6) 0 var(--space-3);
+  }
+
+  .calculator__result {
+    padding: var(--space-6) var(--space-5);
+    background-color: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .calculator__result-title {
+    margin: 0 0 var(--space-5);
+    color: var(--color-orange);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    text-transform: uppercase;
+  }
+
+  .calculator__result-title:focus {
+    outline: none;
+  }
+
+  .calculator__empty {
+    margin: 0 0 var(--space-5);
+  }
+
+  .calculator__figures {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .calculator__figures[hidden] {
+    display: none;
+  }
+
+  .calculator__figure dt {
+    font-size: var(--text-sm);
+  }
+
+  .calculator__figure dd {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .calculator__figure--main dd {
+    color: var(--color-orange);
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    line-height: 1.1;
+  }
+
+  .calculator__disclaimer {
+    margin: var(--space-5) 0;
+    font-size: var(--text-sm);
+  }
+
+  .calculator__cta {
+    width: 100%;
+  }
+
+  .calculator__cta:focus-visible {
+    outline-color: var(--color-white);
+  }
+
+  @media (min-width: 1024px) {
+    .calculator__inner {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .calculator__result {
+      padding: var(--space-7);
+    }
+  }
+</style>
