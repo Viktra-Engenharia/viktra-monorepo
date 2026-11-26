@@ -1,6 +1,6 @@
 import type { ImageMetadata } from 'astro';
-import andreyImage from '../assets/images/founder-andrey.jpeg';
-import ricardoImage from '../assets/images/founder-ricardo.jpeg';
+import andreyImage from '../assets/images/founder-andrey.png';
+import ricardoImage from '../assets/images/founder-ricardo.png';
 
 export interface Founder {
   name: string;

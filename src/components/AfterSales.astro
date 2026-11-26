@@ -110,26 +110,25 @@ const lastItemIndex = afterSalesItems.length - 1;
                 <Image
                   class="after-sales__founder-photo"
                   src={founder.photo}
-                  alt=""
-                  width={72}
-                  height={72}
+                  alt={`Foto de ${founder.name}`}
+                  width={176}
+                  height={176}
                   densities={[1, 2]}
                   format="webp"
                   loading="lazy"
                 />
               )}
-              <div>
-                <p class="after-sales__founder-name">
-                  {founder.name} <span class="after-sales__founder-role">· {founder.role}</span>
-                </p>
-                <p class="after-sales__founder-education">{founder.education}</p>
-              </div>
+              <p class="after-sales__founder-name">{founder.name}</p>
+              <p class="after-sales__founder-role">{founder.role}</p>
+              <p class="after-sales__founder-education">{founder.education}</p>
             </li>
           ))
         }
       </ul>
       <ul class="after-sales__facts">
-        <li>Registro no CREA-SP nº {site.legal.creaSp}</li>
+        <li>
+          Registro no CREA-SP <span class="after-sales__nowrap">nº {site.legal.creaSp}</span>
+        </li>
         <li>Atendemos São Paulo e Goiás</li>
         {yearsInBusiness && <li>{yearsInBusiness} anos de mercado</li>}
       </ul>
@@ -240,9 +239,9 @@ const lastItemIndex = afterSalesItems.length - 1;
 
   .after-sales__trust {
     display: grid;
-    gap: var(--space-5);
+    gap: var(--space-6);
     margin-top: var(--space-8);
-    padding: var(--space-6) var(--space-5);
+    padding: var(--space-7) var(--space-5);
     background-color: var(--color-navy);
     color: var(--color-white);
   }
@@ -252,12 +251,14 @@ const lastItemIndex = afterSalesItems.length - 1;
     color: var(--color-orange);
     font-family: var(--font-heading);
     font-size: var(--text-xl);
+    text-align: center;
     text-transform: uppercase;
   }
 
   .after-sales__founders {
     display: grid;
-    gap: var(--space-4);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5) var(--space-4);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -266,40 +267,58 @@ const lastItemIndex = afterSalesItems.length - 1;
   .after-sales__founder {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    flex-direction: column;
+    text-align: center;
   }
 
+  /* Portraits are already circular (brand ring baked in); radius just trims edge halos. */
   .after-sales__founder-photo {
-    width: 4.5rem;
-    height: 4.5rem;
-    flex: 0 0 auto;
-    object-fit: cover;
+    width: min(100%, 8rem);
+    height: auto;
+    aspect-ratio: 1;
+    margin-bottom: var(--space-3);
+    border-radius: 50%;
   }
 
   .after-sales__founder-name,
+  .after-sales__founder-role,
   .after-sales__founder-education {
     margin: 0;
   }
 
   .after-sales__founder-name {
-    font-weight: 700;
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    line-height: 1.2;
+    text-transform: uppercase;
   }
 
   .after-sales__founder-role {
     color: var(--color-orange);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
   }
 
   .after-sales__founder-education {
+    max-width: 22ch;
+    margin-top: var(--space-1);
     font-size: var(--text-sm);
+    line-height: 1.4;
   }
 
   .after-sales__facts {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-3);
     margin: 0;
-    padding: 0;
+    padding: var(--space-5) 0 0;
+    border-top: 2px solid var(--color-orange);
     list-style: none;
     font-weight: 700;
+  }
+
+  .after-sales__nowrap {
+    white-space: nowrap;
   }
 
   .after-sales__facts li::before {
@@ -334,16 +353,23 @@ const lastItemIndex = afterSalesItems.length - 1;
     .after-sales__trust {
       grid-template-columns: 2fr 1fr;
       align-items: center;
-      gap: var(--space-5) var(--space-7);
-      padding: var(--space-7);
+      gap: var(--space-6) var(--space-8);
+      padding: var(--space-8) var(--space-7);
     }
 
     .after-sales__trust-title {
       grid-column: 1 / -1;
+      text-align: left;
     }
 
-    .after-sales__founders {
-      grid-template-columns: 1fr 1fr;
+    .after-sales__founder-photo {
+      width: 11rem;
+    }
+
+    .after-sales__facts {
+      padding: 0 0 0 var(--space-6);
+      border-top: 0;
+      border-left: 2px solid var(--color-orange);
     }
   }
 </style>
