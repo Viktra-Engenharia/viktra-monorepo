@@ -26,6 +26,8 @@ export const site = {
   areaServed: ['São Paulo (SP)', 'Goiás (GO)'],
   // TODO(conteudo): confirmar a abrangência antes de publicar esta afirmação.
   coverageStatement: '2 estados + de 20 cidades e sempre expandindo',
+  // TODO(conteudo): ano de início das atividades (para "X anos de mercado"); null = não exibir.
+  foundedYear: null as number | null,
 } as const;
 
 // TODO(conteudo): confirmar os dados de contato, endereço e registros legais do mockup.
