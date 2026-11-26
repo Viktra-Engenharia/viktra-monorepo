@@ -110,8 +110,8 @@ const lastItemIndex = afterSalesItems.length - 1;
                   class="after-sales__founder-photo"
                   src={founder.photo}
                   alt={`Foto de ${founder.name}`}
-                  width={176}
-                  height={176}
+                  width={192}
+                  height={192}
                   densities={[1, 2]}
                   format="webp"
                   loading="lazy"
@@ -119,7 +119,6 @@ const lastItemIndex = afterSalesItems.length - 1;
               )}
               <p class="after-sales__founder-name">{founder.name}</p>
               <p class="after-sales__founder-role">{founder.role}</p>
-              <p class="after-sales__founder-education">{founder.education}</p>
             </li>
           ))
         }
@@ -270,7 +269,7 @@ const lastItemIndex = afterSalesItems.length - 1;
 
   /* Portraits are already circular (brand ring baked in); radius just trims edge halos. */
   .after-sales__founder-photo {
-    width: min(100%, 8rem);
+    width: min(100%, 9rem);
     height: auto;
     aspect-ratio: 1;
     margin-bottom: var(--space-3);
@@ -278,8 +277,7 @@ const lastItemIndex = afterSalesItems.length - 1;
   }
 
   .after-sales__founder-name,
-  .after-sales__founder-role,
-  .after-sales__founder-education {
+  .after-sales__founder-role {
     margin: 0;
   }
 
@@ -297,12 +295,6 @@ const lastItemIndex = afterSalesItems.length - 1;
     letter-spacing: 0.08em;
   }
 
-  .after-sales__founder-education {
-    max-width: 22ch;
-    margin-top: var(--space-1);
-    font-size: var(--text-sm);
-    line-height: 1.4;
-  }
 
   .after-sales__about {
     margin: 0;
@@ -352,7 +344,7 @@ const lastItemIndex = afterSalesItems.length - 1;
     }
 
     .after-sales__founder-photo {
-      width: 11rem;
+      width: 12rem;
     }
 
     .after-sales__about {
