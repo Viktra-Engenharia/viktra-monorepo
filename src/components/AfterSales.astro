@@ -3,10 +3,9 @@ import { Image } from 'astro:assets';
 import WhatsAppIcon from './icons/WhatsAppIcon.astro';
 import { afterSalesItems, otherServices, warranties } from '../data/afterSales';
 import { founders } from '../data/team';
-import { getWhatsAppCtaUrl, site } from '../data/site';
+import { getWhatsAppCtaUrl } from '../data/site';
 
 const whatsappUrl = getWhatsAppCtaUrl('after-sales');
-const yearsInBusiness = site.foundedYear ? new Date().getFullYear() - site.foundedYear : null;
 const lastItemIndex = afterSalesItems.length - 1;
 ---
 
@@ -125,13 +124,11 @@ const lastItemIndex = afterSalesItems.length - 1;
           ))
         }
       </ul>
-      <ul class="after-sales__facts">
-        <li>
-          Registro no CREA-SP <span class="after-sales__nowrap">nº {site.legal.creaSp}</span>
-        </li>
-        <li>Atendemos São Paulo e Goiás</li>
-        {yearsInBusiness && <li>{yearsInBusiness} anos de mercado</li>}
-      </ul>
+      <p class="after-sales__about">
+        Somos engenheiros mecatrônicos formados pela USP, com registro no CREA-SP e{' '}
+        <strong>mais de 150 projetos concluídos</strong>. Entendemos o seu consumo, projetamos o
+        sistema certo para você e continuamos ao seu lado depois da instalação.
+      </p>
     </div>
 
     <p class="after-sales__other">
@@ -307,22 +304,14 @@ const lastItemIndex = afterSalesItems.length - 1;
     line-height: 1.4;
   }
 
-  .after-sales__facts {
-    display: grid;
-    gap: var(--space-3);
+  .after-sales__about {
     margin: 0;
     padding: var(--space-5) 0 0;
     border-top: 2px solid var(--color-orange);
-    list-style: none;
-    font-weight: 700;
+    line-height: 1.6;
   }
 
-  .after-sales__nowrap {
-    white-space: nowrap;
-  }
-
-  .after-sales__facts li::before {
-    content: "✓ ";
+  .after-sales__about strong {
     color: var(--color-orange);
   }
 
@@ -351,7 +340,7 @@ const lastItemIndex = afterSalesItems.length - 1;
 
   @media (min-width: 1024px) {
     .after-sales__trust {
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 3fr 2fr;
       align-items: center;
       gap: var(--space-5) var(--space-8);
       padding: var(--space-6) var(--space-7);
@@ -366,7 +355,7 @@ const lastItemIndex = afterSalesItems.length - 1;
       width: 11rem;
     }
 
-    .after-sales__facts {
+    .after-sales__about {
       padding: 0 0 0 var(--space-6);
       border-top: 0;
       border-left: 2px solid var(--color-orange);
