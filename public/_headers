@@ -1,0 +1,7 @@
+# Cloudflare Pages: keep the *.pages.dev address out of search results permanently,
+# even after the custom domain goes live (both serve the same build).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

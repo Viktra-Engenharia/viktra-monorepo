@@ -2,6 +2,9 @@ export const site = {
   name: 'Viktra',
   // TODO(conteudo): confirmar o domínio oficial.
   url: 'https://viktra.com.br',
+  // Adds <meta name="robots" content="noindex"> while false, so the provisional .pages.dev URL isn't
+  // indexed. Set to true when the final domain is connected and the page is ready to launch.
+  allowIndexing: false,
   slogan: 'Liberdade é produzir a própria energia',
   contact: {
     // TODO(conteudo): confirmar se há um ou dois números de WhatsApp.
