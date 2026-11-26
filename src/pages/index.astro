@@ -12,14 +12,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Viktra | Energia Solar e Soluções Elétricas em São Carlos"
-  description="Conheça a Viktra em São Carlos: energia solar, sistemas de bateria e serviços elétricos com atendimento próximo e soluções sob medida."
+  title="Energia Solar em São Carlos | Viktra"
+  description="Reduza sua conta de luz com energia solar. Simule sua economia e peça um orçamento pelo WhatsApp. Projeto, instalação e pós-venda em São Carlos, SP e GO."
 >
   <main>
     <Hero />
     <Calculator />
     <HowItWorks />
-    <Depoimentos />
+    {/* TODO(conteudo): placeholder section — shown only in dev until real, authorized testimonials exist (Stage 5). */}
+    {import.meta.env.DEV && <Depoimentos />}
     <AfterSales />
     <Faq />
     <FinalCta />

@@ -19,7 +19,7 @@ const lastItemIndex = afterSalesItems.length - 1;
         </h2>
         <p class="after-sales__text">
           Energia solar é um investimento de longo prazo. No mercado, muitos clientes têm prejuízo com
-          problemas entre instalador, fornecedor e distribuidora.
+          problemas entre instalador, fornecedor e distribuidora.{' '}
           <strong>Aqui na Viktra, garantimos a responsabilidade total</strong> e seguimos com você
           depois da instalação.
         </p>
@@ -136,8 +136,7 @@ const lastItemIndex = afterSalesItems.length - 1;
     </div>
 
     <p class="after-sales__other">
-      <strong>Também fazemos:</strong>
-      {otherServices.join(', ')}.
+      <strong>Também fazemos:</strong>{' '}{otherServices.join(', ')}.
     </p>
 
     <a
@@ -333,10 +332,14 @@ const lastItemIndex = afterSalesItems.length - 1;
 
   @media (min-width: 1024px) {
     .after-sales__trust {
-      grid-template-columns: 1fr 2fr 1.3fr;
+      grid-template-columns: 2fr 1fr;
       align-items: center;
-      gap: var(--space-7);
+      gap: var(--space-5) var(--space-7);
       padding: var(--space-7);
+    }
+
+    .after-sales__trust-title {
+      grid-column: 1 / -1;
     }
 
     .after-sales__founders {

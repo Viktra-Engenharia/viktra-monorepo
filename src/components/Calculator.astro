@@ -93,6 +93,19 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
       </noscript>
     </div>
 
+    <!-- Fills the right column on desktop until the first result replaces it. -->
+    <div class="calculator__preview" data-preview>
+      <p class="calculator__preview-title">Sua estimativa vai mostrar</p>
+      <ul class="calculator__preview-list">
+        <li>Economia por mês e por ano</li>
+        <li>Tamanho do sistema e número de painéis</li>
+        <li>Tempo de retorno do investimento</li>
+      </ul>
+      <p class="calculator__preview-note">
+        Depois, é só pedir a proposta detalhada no WhatsApp.
+      </p>
+    </div>
+
     <div class="calculator__result" data-result hidden>
       <h3 class="calculator__result-title" tabindex="-1" data-result-title>Sua estimativa</h3>
       <p class="calculator__empty" data-result-empty hidden>
@@ -142,6 +155,7 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
 
   const form = document.querySelector<HTMLFormElement>('[data-calculator]');
   const result = document.querySelector<HTMLElement>('[data-result]');
+  const preview = document.querySelector<HTMLElement>('[data-preview]');
 
   if (form && result) {
     const billInput = form.querySelector<HTMLInputElement>('#calculator-bill')!;
@@ -248,6 +262,7 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
       }
       resultCta.href = getWhatsAppUrl(lines.join('\n'));
 
+      if (preview) preview.hidden = true;
       result.hidden = false;
       resultTitle.focus();
       track('calculator_result', { region: regionId, connection: connectionValue, hasSavings });
@@ -463,6 +478,10 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
     outline-color: var(--color-white);
   }
 
+  .calculator__preview {
+    display: none;
+  }
+
   @media (min-width: 1024px) {
     .calculator__inner {
       grid-template-columns: 1fr 1fr;
@@ -470,6 +489,43 @@ if (!calculatorConfig.validated && import.meta.env.PROD) {
 
     .calculator__result {
       padding: var(--space-7);
+    }
+
+    .calculator__preview {
+      display: block;
+      align-self: center;
+      padding: var(--space-7);
+      border: 2px dashed var(--color-navy);
+    }
+
+    .calculator__preview[hidden] {
+      display: none;
+    }
+
+    .calculator__preview-title {
+      margin: 0 0 var(--space-4);
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      text-transform: uppercase;
+    }
+
+    .calculator__preview-list {
+      display: grid;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-weight: 700;
+    }
+
+    .calculator__preview-list li::before {
+      content: "✓ ";
+      color: var(--color-orange);
+    }
+
+    .calculator__preview-note {
+      margin: var(--space-5) 0 0;
+      font-size: var(--text-sm);
     }
   }
 </style>
