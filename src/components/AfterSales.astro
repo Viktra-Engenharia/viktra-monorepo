@@ -138,9 +138,7 @@ const lastItemIndex = afterSalesItems.length - 1;
           otherServices.map((service) => (
             <li class="after-sales__other-item">
               <span class="after-sales__other-label">{service.label}</span>
-              {service.detail && (
-                <span class="after-sales__other-detail">{service.detail}</span>
-              )}
+              <span class="after-sales__other-detail">{service.detail}</span>
             </li>
           ))
         }
@@ -339,7 +337,7 @@ const lastItemIndex = afterSalesItems.length - 1;
   .after-sales__other-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: var(--space-4);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -347,10 +345,8 @@ const lastItemIndex = afterSalesItems.length - 1;
 
   .after-sales__other-item {
     display: flex;
-    padding: var(--space-2) var(--space-3);
     flex-direction: column;
-    justify-content: center;
-    border: 2px solid var(--color-navy);
+    gap: var(--space-1);
   }
 
   .after-sales__other-label {

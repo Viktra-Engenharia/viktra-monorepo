@@ -19,10 +19,11 @@ export const afterSalesItems: AfterSalesItem[] = [
 // TODO(conteudo): garantias reais (equipamentos e instalação) com prazos; não exibir até confirmar.
 export const warranties: { label: string; term: string }[] = [];
 
-/** Secondary services, shown only as a short "também fazemos" line. */
-export const otherServices: { label: string; detail?: string }[] = [
+/** Secondary services, shown in the small "também fazemos" banner. */
+// TODO(conteudo): revisar os detalhes genéricos de automação, elétrica e projetos.
+export const otherServices: { label: string; detail: string }[] = [
   { label: 'Sistemas de bateria', detail: 'Off grid, híbrido e banco de baterias' },
-  { label: 'Automação' },
-  { label: 'Elétrica em geral' },
-  { label: 'Projetos elétricos' },
+  { label: 'Automação', detail: 'Automação para residências e empresas' },
+  { label: 'Elétrica em geral', detail: 'Instalações, reformas e manutenção' },
+  { label: 'Projetos elétricos', detail: 'Projetos com responsável técnico' },
 ];
