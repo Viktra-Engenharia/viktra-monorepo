@@ -130,9 +130,22 @@ const lastItemIndex = afterSalesItems.length - 1;
       </p>
     </div>
 
-    <p class="after-sales__other">
-      <strong>Também fazemos:</strong>{' '}{otherServices.join(', ')}.
-    </p>
+    <!-- Attached to the bottom of the navy card, like the mockup's orange bands. -->
+    <aside class="after-sales__other" aria-labelledby="other-services-title">
+      <h3 class="after-sales__other-title" id="other-services-title">Também fazemos</h3>
+      <ul class="after-sales__other-list">
+        {
+          otherServices.map((service) => (
+            <li class="after-sales__other-item">
+              <span class="after-sales__other-label">{service.label}</span>
+              {service.detail && (
+                <span class="after-sales__other-detail">{service.detail}</span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
 
     <a
       class="btn-whatsapp after-sales__cta"
@@ -308,13 +321,52 @@ const lastItemIndex = afterSalesItems.length - 1;
   }
 
   .after-sales__other {
-    max-width: 65ch;
-    margin: var(--space-6) 0;
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    background-color: var(--color-orange);
+    color: var(--color-navy);
+  }
+
+  .after-sales__other-title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  .after-sales__other-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .after-sales__other-item {
+    display: flex;
+    padding: var(--space-2) var(--space-3);
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid var(--color-navy);
+  }
+
+  .after-sales__other-label {
     font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .after-sales__other-detail {
+    font-size: var(--text-xs);
+    line-height: 1.3;
   }
 
   .after-sales__cta {
     width: 100%;
+    margin-top: var(--space-6);
   }
 
   @media (min-width: 640px) {
@@ -345,6 +397,17 @@ const lastItemIndex = afterSalesItems.length - 1;
 
     .after-sales__founder-photo {
       width: 12rem;
+    }
+
+    .after-sales__other {
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-5) var(--space-7);
+    }
+
+    .after-sales__other-list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .after-sales__about {

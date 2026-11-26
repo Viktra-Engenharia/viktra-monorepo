@@ -20,9 +20,9 @@ export const afterSalesItems: AfterSalesItem[] = [
 export const warranties: { label: string; term: string }[] = [];
 
 /** Secondary services, shown only as a short "também fazemos" line. */
-export const otherServices: string[] = [
-  'sistemas de bateria (off grid, híbrido e banco de baterias)',
-  'automação',
-  'elétrica em geral',
-  'projetos elétricos',
+export const otherServices: { label: string; detail?: string }[] = [
+  { label: 'Sistemas de bateria', detail: 'Off grid, híbrido e banco de baterias' },
+  { label: 'Automação' },
+  { label: 'Elétrica em geral' },
+  { label: 'Projetos elétricos' },
 ];
