@@ -14,7 +14,7 @@ export const site = {
     email: 'contato@viktra.com.br',
   },
   address: {
-    streetAddress: 'João Ramalho, 376',
+    streetAddress: 'Iwagiro Toyama, 1128',
     locality: 'São Carlos',
     region: 'SP',
     country: 'BR',
