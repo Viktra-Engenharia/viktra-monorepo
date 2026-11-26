@@ -1,5 +1,7 @@
 export const site = {
   name: 'Viktra',
+  // TODO(conteudo): confirmar o domínio oficial.
+  url: 'https://viktra.com.br',
   contact: {
     whatsappNumber: '+55 (16) 98163-9383',
     instagramHandle: '@Viktra.sãocarlos',
@@ -18,6 +20,8 @@ export const site = {
     // TODO(conteudo): confirmar a razão social; o mockup informa "Vector A tecnologia".
     legalName: null,
   },
+  // TODO(conteudo): confirmar o atendimento nos dois estados antes de publicar.
+  areaServed: ['São Paulo (SP)', 'Goiás (GO)'],
   // TODO(conteudo): confirmar a abrangência antes de publicar esta afirmação.
   coverageStatement: '2 estados + de 20 cidades e sempre expandindo',
 } as const;

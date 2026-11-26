@@ -11,23 +11,30 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const siteUrl = Astro.site ?? new URL('https://viktra.com.br');
+const siteUrl = new URL(site.url);
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
-// TODO(conteudo): exportar a imagem social para public/og-image.png.
+// TODO(conteudo): replace this placeholder with the approved 1200x630 brand artwork.
 const socialImageUrl = new URL('/og-image.png', siteUrl);
 
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   name: site.name,
-  url: siteUrl.href,
+  url: site.url,
   telephone: site.contact.whatsappNumber,
+  email: site.contact.email,
+  sameAs: [site.contact.instagramUrl],
   address: {
     '@type': 'PostalAddress',
+    streetAddress: site.address.streetAddress,
     addressLocality: site.address.locality,
     addressRegion: site.address.region,
     addressCountry: site.address.country,
   },
+  areaServed: site.areaServed.map((area) => ({
+    '@type': 'AdministrativeArea',
+    name: area,
+  })),
 };
 ---
 
