@@ -1,12 +1,31 @@
 ---
 import { Image } from 'astro:assets';
 import WhatsAppIcon from './icons/WhatsAppIcon.astro';
-import { afterSalesItems, otherServices, warranties } from '../data/afterSales';
+import type { ImageMetadata } from 'astro';
+import monitoringIcon from '../assets/icons/monitoramento.png';
+import insuranceIcon from '../assets/icons/acionamento-seguros.png';
+import supportIcon from '../assets/icons/central-duvidas.png';
+import maintenanceIcon from '../assets/icons/equipe-manutencao.png';
+import reportsIcon from '../assets/icons/relatorios-mensais.png';
+import {
+  afterSalesItems,
+  otherServices,
+  warranties,
+  type AfterSalesIcon,
+} from '../data/afterSales';
 import { founders } from '../data/team';
 import { getWhatsAppCtaUrl } from '../data/site';
 
 const whatsappUrl = getWhatsAppCtaUrl('after-sales');
 const lastItemIndex = afterSalesItems.length - 1;
+
+const icons: Record<AfterSalesIcon, ImageMetadata> = {
+  monitoring: monitoringIcon,
+  insurance: insuranceIcon,
+  support: supportIcon,
+  maintenance: maintenanceIcon,
+  reports: reportsIcon,
+};
 ---
 
 <section class="after-sales" aria-labelledby="after-sales-title">
@@ -45,49 +64,16 @@ const lastItemIndex = afterSalesItems.length - 1;
                 { 'after-sales__item--highlight': index === lastItemIndex },
               ]}
             >
-              <span class="after-sales__icon" aria-hidden="true">
-                <svg
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  {item.icon === 'monitoring' && (
-                    <g>
-                      <circle cx="27" cy="27" r="15" />
-                      <path d="m38 38 14 14m-25-24-9 9 5 5 9-9m-6-4 5 5m10-15h8v8m-8 0 10-10" />
-                    </g>
-                  )}
-                  {item.icon === 'insurance' && (
-                    <g>
-                      <path d="m32 7 20 9v14c0 12-8 21-20 27C20 51 12 42 12 30V16z" />
-                      <path d="m22 31 7 7 14-16" />
-                    </g>
-                  )}
-                  {item.icon === 'support' && (
-                    <g>
-                      <path d="M12 32a20 20 0 0 1 40 0v9a5 5 0 0 1-5 5h-5V29h5m-35 0h5v17h-5a5 5 0 0 1-5-5z" />
-                      <path d="M17 29a15 15 0 0 1 30 0M28 47h8" />
-                      <circle cx="26" cy="34" r="1" />
-                      <circle cx="32" cy="34" r="1" />
-                      <circle cx="38" cy="34" r="1" />
-                    </g>
-                  )}
-                  {item.icon === 'maintenance' && (
-                    <g>
-                      <path d="M38 12a13 13 0 0 0-17 17L9 41l14 14 12-12a13 13 0 0 0 17-17l-9 9-9-9z" />
-                      <path d="m10 15 9 9m-4-13 9 9m7 22 8 8" />
-                    </g>
-                  )}
-                  {item.icon === 'reports' && (
-                    <g>
-                      <path d="M18 10h28v44H18zM25 10V6h14v4m-9 12h12m-12 8h12m-12 8h7" />
-                      <path d="m36 45 4 4 9-10" />
-                    </g>
-                  )}
-                </svg>
+              <span class="after-sales__icon">
+                <Image
+                  class="after-sales__icon-image"
+                  src={icons[item.icon]}
+                  alt=""
+                  width={56}
+                  height={56}
+                  densities={[1, 2]}
+                  loading="lazy"
+                />
               </span>
               <div>
                 <h3 class="after-sales__item-title">{item.label}</h3>
@@ -222,9 +208,12 @@ const lastItemIndex = afterSalesItems.length - 1;
     color: var(--color-white);
   }
 
-  .after-sales__icon svg {
-    width: 2.75rem;
-    height: 2.75rem;
+  /* Source icons are black line art; invert renders them white on the circles. */
+  .after-sales__icon-image {
+    width: 2.25rem;
+    height: 2.25rem;
+    object-fit: contain;
+    filter: invert(1);
   }
 
   .after-sales__item--highlight .after-sales__icon {
