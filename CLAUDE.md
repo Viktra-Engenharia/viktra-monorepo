@@ -21,7 +21,6 @@
 - Footer: keep as is (no blog/other pages yet).
 - Fio B: engineers say it's low impact today — config parameter only, no copy around it.
 - Placeholder-only sections (testimonials, unanswered FAQ) render in dev only, never in the production build.
-- Calculator ships only after `calculatorConfig.validated = true` (engineers' sign-off).
 - Baseline (2026-11-26, local preview): Lighthouse mobile 99/100/100/100, LCP ~1.9s, CLS ~0.
 - Domain/hosting: _(TBD — Cloudflare Pages or Netlify)_
 - Blog URL (separate project): _(TBD)_

@@ -45,8 +45,6 @@ export interface CalculatorConfig {
   billLimits: Range;
   /** Connection type assumed when the visitor answers "Não sei". */
   defaultConnection: ConnectionType;
-  /** Set to true only after the engineers validate the parameters against real proposals. */
-  validated: boolean;
 }
 
 export const calculatorConfig: CalculatorConfig = {
@@ -88,5 +86,4 @@ export const calculatorConfig: CalculatorConfig = {
   savingsRealization: { min: 0.85, max: 0.95 },
   billLimits: { min: 100, max: 50000 },
   defaultConnection: 'bi',
-  validated: false,
 };
