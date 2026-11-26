@@ -2,27 +2,45 @@
 import { Image } from 'astro:assets';
 import heroImage from '../assets/images/rooftop-hero.png';
 import logoUrl from '../assets/logo/white-logo-with-triangle.svg?url';
-import { getWhatsAppUrl } from '../data/site';
+import WhatsAppIcon from './icons/WhatsAppIcon.astro';
+import { getWhatsAppCtaUrl, site } from '../data/site';
 
-const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
+const whatsappUrl = getWhatsAppCtaUrl('hero');
 ---
 
 <section class="hero" aria-labelledby="hero-title">
   <Image
     class="hero__image"
     src={heroImage}
-    alt="Vista aérea de telhado residencial equipado com painéis solares."
+    alt=""
+    widths={[480, 768, 1024, 1440, 1920]}
+    sizes="100vw"
     format="webp"
+    quality={60}
     loading="eager"
     fetchpriority="high"
   />
   <div class="hero__overlay" aria-hidden="true"></div>
   <div class="hero__content container">
     <img class="hero__logo" src={logoUrl} alt="Viktra" width="1137" height="185" />
-    <h1 class="hero__title" id="hero-title">LIBERDADE É PRODUZIR A PRÓPRIA ENERGIA</h1>
-    <a class="hero__cta" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-      Fale Conosco
-    </a>
+    <p class="hero__kicker">Energia solar em São Carlos e região</p>
+    <!-- TODO(conteudo): aprovar o título; combinar com o post/anúncio que leva ao site. -->
+    <h1 class="hero__title" id="hero-title">Reduza sua conta de luz com energia solar</h1>
+    <p class="hero__lead">
+      {site.slogan}. Projeto, instalação e pós-venda feitos por engenheiros, com registro no CREA-SP.
+    </p>
+    <div class="hero__actions">
+      <a
+        class="btn-whatsapp hero__cta"
+        href={whatsappUrl}
+        data-track="whatsapp_click"
+        data-track-location="hero"
+      >
+        <WhatsAppIcon />
+        Pedir orçamento no WhatsApp
+      </a>
+      <a class="hero__secondary" href="#simulador">Simular minha economia</a>
+    </div>
   </div>
 </section>
 
@@ -32,7 +50,8 @@ const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
     isolation: isolate;
     display: grid;
     min-height: 36rem;
-    padding: var(--space-7) var(--page-gutter) 8rem;
+    /* Bottom padding leaves room for the steps strip that overlaps the hero. */
+    padding: var(--space-7) 0 8rem;
     place-items: center;
     overflow: hidden;
     background-color: var(--color-navy);
@@ -58,47 +77,74 @@ const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
 
   .hero__content {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
-    text-align: center;
   }
 
   .hero__logo {
-    width: min(78vw, 36rem);
+    width: min(55vw, 14rem);
     height: auto;
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__kicker {
+    margin: 0 0 var(--space-3);
+    color: var(--color-orange);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .hero__title {
-    max-width: 24ch;
+    max-width: 18ch;
     margin: 0;
     color: var(--color-white);
     font-family: var(--font-heading);
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     font-weight: 700;
-    line-height: 1.12;
+    line-height: 1.1;
     text-transform: uppercase;
     text-wrap: balance;
   }
 
-  .hero__cta {
-    display: inline-flex;
-    min-width: 11rem;
-    min-height: 3rem;
-    margin-top: var(--space-7);
-    padding: var(--space-3) var(--space-6);
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-orange);
-    color: var(--color-navy);
+  .hero__lead {
+    max-width: 38ch;
+    margin: var(--space-4) 0 0;
+    color: var(--color-white);
     font-size: var(--text-base);
-    font-weight: 700;
-    line-height: 1.25;
-    text-decoration: none;
   }
 
-  .hero__cta:hover {
-    background-color: var(--color-white);
+  .hero__actions {
+    display: flex;
+    width: 100%;
+    margin-top: var(--space-6);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .hero__secondary {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    font-weight: 700;
+    text-underline-offset: 0.25em;
+  }
+
+  .hero__secondary:hover {
+    color: var(--color-orange);
+  }
+
+  @media (min-width: 640px) {
+    .hero__actions {
+      width: auto;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-6);
+    }
   }
 
   @media (min-width: 768px) {
@@ -107,10 +153,26 @@ const whatsappUrl = getWhatsAppUrl('Olá! Gostaria de falar com a Viktra.');
       padding-block: var(--space-8) 10rem;
     }
 
+    .hero__content {
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero__logo {
+      width: min(50vw, 26rem);
+    }
+
+    .hero__title {
+      max-width: 22ch;
+      font-size: var(--text-3xl);
+    }
+
+    .hero__actions {
+      justify-content: center;
+    }
+
     .hero__cta {
-      min-width: 17rem;
-      min-height: 4rem;
-      margin-top: var(--space-8);
+      min-height: 3.5rem;
       font-size: var(--text-lg);
     }
   }

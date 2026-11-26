@@ -46,6 +46,14 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.6;
+  /* Keeps the mobile sticky WhatsApp bar from covering the end of the page. */
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+  }
 }
 
 img,
