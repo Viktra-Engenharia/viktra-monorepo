@@ -27,9 +27,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     <!-- TODO(conteudo): aprovar o título; combinar com o post/anúncio que leva ao site. -->
     <h1 class="hero__title" id="hero-title">Reduza sua conta de luz com energia solar</h1>
     <p class="hero__lead">
-      {site.slogan}.<span class="hero__lead-more"
-        >{' '}Projeto, instalação e pós-venda feitos por engenheiros, com registro no CREA-SP.</span
-      >
+      {site.slogan}. Projeto, instalação e pós-venda feitos por engenheiros, com registro no CREA-SP.
     </p>
     <div class="hero__actions">
       <a
@@ -41,7 +39,7 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
         <WhatsAppIcon />
         Pedir orçamento no WhatsApp
       </a>
-      <a class="hero__secondary" href="#simulador">Simular minha economia</a>
+      <a class="hero__secondary" href="#simulador">SIMULAR MINHA ECONOMIA</a>
     </div>
   </div>
 </section>
@@ -146,6 +144,26 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
   @media (max-width: 639.98px) {
     .hero {
       min-height: max(36rem, 100svh);
+    }
+
+    /* Logo + kicker sit as a tight pair in the upper area; title block stays centred below. */
+    .hero__content {
+      align-self: stretch;
+    }
+
+    .hero__logo {
+      margin-top: clamp(var(--space-4), 8svh, var(--space-8));
+      margin-bottom: var(--space-2);
+    }
+
+    .hero__title {
+      margin-top: auto;
+    }
+
+    /* Buttons drop toward the bottom (thumb zone), leaving a small gap above the fold. */
+    .hero__actions {
+      margin-top: auto;
+      margin-bottom: clamp(var(--space-2), 4svh, var(--space-6));
     }
 
     .hero__lead-more {
