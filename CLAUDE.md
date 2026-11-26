@@ -19,6 +19,7 @@
 
 - Goal: get visitors to message Viktra on WhatsApp. No lead form for now.
 - Footer: keep as is (no blog/other pages yet).
+- No sticky WhatsApp bar on mobile (removed 2026-11-26); in-page CTAs only.
 - Fio B: engineers say it's low impact today — config parameter only, no copy around it.
 - Placeholder-only sections (testimonials, unanswered FAQ) render in dev only, never in the production build.
 - Baseline (2026-11-26, local preview): Lighthouse mobile 99/100/100/100, LCP ~1.9s, CLS ~0.

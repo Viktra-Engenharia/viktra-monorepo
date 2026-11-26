@@ -41,7 +41,6 @@ export const site = {
  */
 export type CtaLocation =
   | 'hero'
-  | 'sticky'
   | 'calculator'
   | 'how-it-works'
   | 'social-proof'
@@ -53,7 +52,6 @@ export type CtaLocation =
 // TODO(conteudo): revisar o texto das mensagens com a equipe que atende o WhatsApp.
 export const whatsappMessages: Record<CtaLocation, string> = {
   hero: 'Olá! Vi o site da Viktra e quero saber quanto posso economizar com energia solar.',
-  sticky: 'Olá! Vi o site da Viktra e quero um orçamento de energia solar.',
   calculator: 'Olá! Fiz a simulação no site da Viktra e quero a proposta detalhada.',
   'how-it-works': 'Olá! Quero entender como funciona a instalação de energia solar.',
   'social-proof': 'Olá! Vi as obras da Viktra e quero um orçamento de energia solar.',

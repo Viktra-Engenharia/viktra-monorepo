@@ -32,7 +32,6 @@ Site language: **pt-BR**. Code language (identifiers, components, commits, these
 | 5 | `AfterSales` | Warranty and after-sales + short credibility block (USP engineers, CREA-SP, years in business) | `PosInstalacao` + `Sobre` (reduced) |
 | 6 | `Faq` | Real objections (cloudy days, roof type, approval time, financing, maintenance, warranty) | new |
 | 7 | `FinalCta` | Last WhatsApp push + company contact data | `Contato` |
-| — | `StickyCta` | Fixed WhatsApp bar on mobile | new |
 | — | `Footer` | **Keep as is.** No blog/other pages exist yet | `Footer` |
 
 Shrunk or removed: `Produtos` → at most a small "também fazemos" strip; `OndeEstamos` → one line
@@ -41,7 +40,7 @@ Shrunk or removed: `Produtos` → at most a small "também fazemos" strip; `Onde
 ## Conversion rules
 
 - **Primary CTA everywhere: WhatsApp** (`wa.me` with a pre-filled pt-BR message). Repeat it after each major
-  section; sticky bar on mobile. No competing CTAs (no blog/social links above the footer).
+  section. No sticky bar (removed by decision). No competing CTAs (no blog/social links above the footer).
 - WhatsApp messages are built by `getWhatsAppUrl()` in `src/data/site.ts`; vary the message per CTA so the team
   knows where the lead came from (e.g. calculator result includes bill amount, city and connection type).
 - **No lead form for now.** WhatsApp is the lead channel. Do not add form backends without asking.
@@ -76,7 +75,7 @@ Shrunk or removed: `Produtos` → at most a small "também fazemos" strip; `Onde
 ## Stack (do not add anything without asking)
 
 - **Astro** + **TypeScript strict**; **plain CSS** (variables in `src/styles/global.css` + scoped `<style>`)
-- **No client JS by default.** Justified exceptions: calculator, sticky CTA behaviour (only if CSS can't do it),
+- **No client JS by default.** Justified exceptions: calculator,
   measurement events. Vanilla JS only, no frameworks (React/Vue/Svelte), no UI libs, no Tailwind, no jQuery.
 - Self-hosted fonts via `@fontsource`; images via `astro:assets` (`<Image />` / `<Picture />`)
 - No third-party scripts (analytics, chat, pixels) without explicit request. Measurement: keep a small
@@ -147,8 +146,7 @@ Defined in `:root` in `global.css`. **Always use the variables**, never raw hex 
 - **Mobile-first**: base styles for ~320–390px; scale up with `min-width` (640, 768, 1024, 1280px).
 - Content `max-width` ~1200px centered; no horizontal scroll at any width.
 - Left-aligned text on mobile (the mockup's justified text only on wide screens, if at all).
-- Touch targets ≥ 44×44px. Sticky CTA must not cover content (add bottom padding) and must respect
-  `env(safe-area-inset-bottom)`.
+- Touch targets ≥ 44×44px.
 - Test at 320, 390, 768, 1024, 1440px — and inside Instagram's in-app browser.
 
 ## Performance
