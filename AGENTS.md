@@ -1,135 +1,198 @@
-# AGENTS.md — Landing page Viktra
+# AGENTS.md — Viktra landing page
 
-Landing page institucional da **Viktra** (energia solar, elétrica e sistemas de bateria — São Carlos, SP).
-Objetivo: converter visitantes em contatos (WhatsApp / e-mail), com **SEO forte**, **performance alta** e
-funcionamento impecável em **desktop e celular**. O blog e as seções detalhadas ficam em **outro projeto**;
-esta página apenas **linka** para ele.
+Conversion landing page for **Viktra** (solar PV installation; secondarily batteries and electrical work —
+São Carlos, SP; serves SP and GO).
 
-Idioma do site: **pt-BR**. Idioma do código (nomes de variáveis, componentes, commits): **inglês**.
+**Single goal: get the visitor to start a WhatsApp conversation with Viktra.** Every section is judged by one
+question: *does this bring the visitor closer to messaging us on WhatsApp?* If not, it shrinks, moves or goes.
+
+Site language: **pt-BR**. Code language (identifiers, components, commits, these docs): **English**.
 
 ---
 
-## Stack (não adicionar nada fora disso sem perguntar)
+## Audience and channel
 
-- **Astro** (versão estável atual) + **TypeScript strict**
-- **CSS puro**: variáveis em `src/styles/global.css` + estilos escopados (`<style>`) em cada componente
-- **Zero JavaScript no cliente por padrão.** Só adicionar JS se não houver solução em HTML/CSS, e justificar
-- Fontes auto-hospedadas via `@fontsource` (nada de Google Fonts em tempo de execução)
-- Imagens com `astro:assets` (`<Image />` / `<Picture />`)
-- Sem Tailwind, sem bibliotecas de UI, sem jQuery, sem frameworks (React/Vue/Svelte) nesta página
-- Sem scripts de terceiros (analytics, chat, pixels) sem pedido explícito
+- Traffic comes mainly from **Instagram** (bio link, Stories, possibly ads): almost all **mobile**, opened in
+  **Instagram's in-app browser** (iOS and Android). Design and test for that first.
+- Low intent (they were scrolling, not searching): the page must grab attention in seconds, with short,
+  scannable copy, real photos of installations and a short scroll to the first CTA.
+- Page headline and offer must match the post/Story/ad that drove the click.
+- One link per source with UTMs (`utm_source=instagram`, `utm_medium=bio|stories|ads`, `utm_campaign=...`).
+- In-app browser: no `window.open`, no pop-ups, nothing that breaks in webviews; `wa.me` and `tel:` links must
+  open correctly on iOS and Android.
 
-## Comandos
+## Page structure (in order)
+
+| # | Section | Purpose | Reuses |
+|---|---|---|---|
+| 1 | `Hero` | Benefit headline + **WhatsApp CTA** | `Hero` (rewritten) |
+| 2 | `Calculator` | Quick savings estimate that ends in a WhatsApp message with the inputs pre-filled | new |
+| 3 | `HowItWorks` | Remove fear of the process: steps with real lead times | `Etapas` |
+| 4 | `SocialProof` | Real installations (city, kWp, savings), authorized testimonials, Google reviews | `Depoimentos` |
+| 5 | `AfterSales` | Warranty and after-sales + short credibility block (USP engineers, CREA-SP, years in business) | `PosInstalacao` + `Sobre` (reduced) |
+| 6 | `Faq` | Real objections (cloudy days, roof type, approval time, financing, maintenance, warranty) | new |
+| 7 | `FinalCta` | Last WhatsApp push + company contact data | `Contato` |
+| — | `StickyCta` | Fixed WhatsApp bar on mobile | new |
+| — | `Footer` | **Keep as is.** No blog/other pages exist yet | `Footer` |
+
+Shrunk or removed: `Produtos` → at most a small "também fazemos" strip; `OndeEstamos` → one line
+("atendemos SP e GO" + cities with real installations); `Sobre` → credibility block inside `AfterSales`.
+
+## Conversion rules
+
+- **Primary CTA everywhere: WhatsApp** (`wa.me` with a pre-filled pt-BR message). Repeat it after each major
+  section; sticky bar on mobile. No competing CTAs (no blog/social links above the footer).
+- WhatsApp messages are built by `getWhatsAppUrl()` in `src/data/site.ts`; vary the message per CTA so the team
+  knows where the lead came from (e.g. calculator result includes bill amount, city and connection type).
+- **No lead form for now.** WhatsApp is the lead channel. Do not add form backends without asking.
+- Headline speaks to the benefit in plain language (e.g. "Reduza sua conta de luz com energia solar em São Carlos").
+  Only promise numbers Viktra can back with real installations.
+- Speed is part of conversion: keep the page light.
+
+## Savings calculator
+
+- Inputs (minimum): average monthly bill (R$), state/city (SP or GO), connection type (mono/bi/tri).
+- Show results **as ranges**, before asking anything: monthly/yearly savings, suggested kWp, approx. panel count,
+  payback. Then CTA: "Receber proposta detalhada no WhatsApp" → opens WhatsApp with the inputs and estimate.
+- Model (to be calibrated by Viktra's engineers):
+  - consumption (kWh/month) = bill ÷ tariff
+  - kWp ≈ consumption ÷ (peak sun hours × 30 × system efficiency ~0.75–0.8)
+  - savings ≈ (consumption − availability cost of 30/50/100 kWh for mono/bi/tri) × tariff
+  - Fio B (Lei 14.300) is **low priority** per the engineers: keep it as an optional config parameter
+    (default small/zero), and don't build copy or marketing around it.
+- All parameters (tariffs per utility, sun hours, price per kWp, efficiency) live in `src/data/calculator.ts`,
+  editable without touching components. Placeholder values must be marked `TODO(conteudo)`.
+- Always state the estimate is approximate and the final proposal depends on a site visit.
+- Runs fully in the browser (vanilla JS, no backend). Keyboard accessible, labelled inputs, clear errors,
+  numeric keyboard on mobile (`inputmode="decimal"`). `<noscript>` fallback: plain WhatsApp CTA.
+
+## Offers and urgency (Brazilian consumer law — CDC)
+
+- Every offer shows its **end date and conditions** on the page. Fixed deadline; never a timer that resets.
+- Prefer bonuses (free site visit, 12 months monitoring) over % discounts.
+- No fake scarcity. No "install before January because of Fio B" claims.
+- Offer data lives in `src/data/offer.ts` (title, description, end date, conditions); expired offers are not rendered.
+
+## Stack (do not add anything without asking)
+
+- **Astro** + **TypeScript strict**; **plain CSS** (variables in `src/styles/global.css` + scoped `<style>`)
+- **No client JS by default.** Justified exceptions: calculator, sticky CTA behaviour (only if CSS can't do it),
+  measurement events. Vanilla JS only, no frameworks (React/Vue/Svelte), no UI libs, no Tailwind, no jQuery.
+- Self-hosted fonts via `@fontsource`; images via `astro:assets` (`<Image />` / `<Picture />`)
+- No third-party scripts (analytics, chat, pixels) without explicit request. Measurement: keep a small
+  `track(event, data)` helper that is a no-op until an analytics tool is chosen (prefer cookieless: Plausible/Umami).
+  Events: hero view, calculator start, result shown, WhatsApp click (with CTA location), phone/e-mail click.
+
+## Commands
 
 ```bash
-npm run dev            # servidor local (use `-- --host` para testar no celular)
-npm run build          # build de produção -> dist/
-npm run preview        # servir o build
-npx astro check        # checagem de tipos (se @astrojs/check estiver instalado)
+npm run dev -- --host  # dev server (reachable from a phone on the LAN)
+npm run build          # production build -> dist/
+npm run preview        # serve the build
+npx astro check        # type check
 ```
 
-Depois de qualquer alteração relevante: rodar `npm run build` e corrigir erros/avisos antes de concluir.
+Run `npm run build` after every relevant change and fix errors/warnings before finishing.
 
-## Estrutura
+## Structure
 
 ```
-design/mockup/     # imagens do mockup (Canva) — consultar antes de construir cada seção
+design/mockup/     # Canva mockup images (desktop only, institutional version — layout/style reference)
 public/            # robots.txt, favicon, og-image
 src/
-  assets/          # imagens e SVGs otimizáveis
-  components/      # um componente por seção (Hero, Etapas, PosInstalacao, Produtos, Depoimentos, OndeEstamos, Sobre, Contato, Footer)
-  data/site.ts     # FONTE ÚNICA de dados da empresa (telefone, e-mail, endereço, CNPJ, CREA, redes, links)
-  layouts/         # BaseLayout.astro (head, SEO, JSON-LD, slots)
+  assets/          # optimizable images and SVGs
+  components/      # one component per section (see Page structure)
+  data/
+    site.ts        # SINGLE source for company data (phone, e-mail, address, CNPJ, CREA, socials) + getWhatsAppUrl
+    calculator.ts  # calculator parameters
+    offer.ts       # current offer (optional)
+    faq.ts, testimonials.ts, projects.ts  # typed content arrays
+  lib/track.ts     # measurement helper
+  layouts/         # BaseLayout.astro (head, SEO, JSON-LD)
   pages/index.astro
   styles/global.css
 ```
 
 ## Design tokens
 
-Definir em `:root` no `global.css` e **sempre usar as variáveis**, nunca hex solto nos componentes.
+Defined in `:root` in `global.css`. **Always use the variables**, never raw hex in components.
 
 ```css
 :root {
-  --color-navy:   #0e1e48; /* azul-marinho: títulos, fundos escuros, texto principal */
-  --color-orange: #fc4f00; /* laranja: CTAs, destaques, ícones, faixas */
-  --color-bg:     #f7f7f7; /* fundo claro (o mockup usa textura de papel sobre este tom) */
+  --color-navy:   #0e1e48; /* titles, dark backgrounds, main text */
+  --color-orange: #fc4f00; /* CTAs, highlights, icons, bands */
+  --color-bg:     #f7f7f7; /* light background */
   --color-white:  #ffffff;
 }
 ```
 
-- Títulos: **Oswald** (caixa alta, peso forte). Texto corrido: **Montserrat**. (Confirmar com o Canva; se divergir, atualizar aqui.)
-- Estilo visual: blocos retos (sem cantos muito arredondados), faixas laranja, sublinhado laranja sob títulos
-  de seção, cartões laranja com ícone branco, bloco "ECONOMIA" em azul-marinho. Seguir o mockup.
-- Escala de espaçamento e tamanhos de fonte em variáveis (`--space-*`, `--text-*`); usar `clamp()` para tipografia fluida.
+- Headings: **Oswald** (uppercase, bold). Body: **Montserrat**. (Confirm with Canva.)
+- Visual style from the mockup: straight blocks (no big radii), orange bands, orange underline under section
+  titles, orange cards with white icons, navy "ECONOMIA" block. Paper texture optional, never at LCP cost.
+- WhatsApp buttons may use the brand orange (navy text) — keep one consistent CTA style across the page.
+- Spacing and font sizes in variables (`--space-*`, `--text-*`); fluid type with `clamp()`.
 
-### Contraste (valores aproximados — respeitar)
+### Contrast (approximate — respect it)
 
-| Combinação | Razão | Uso permitido |
+| Combination | Ratio | Allowed for |
 |---|---|---|
-| Azul-marinho sobre `#f7f7f7` | ≈ 15:1 | qualquer texto |
-| Azul-marinho sobre laranja | ≈ 4,8:1 | qualquer texto (padrão do mockup) |
-| Laranja sobre azul-marinho | ≈ 4,8:1 | qualquer texto |
-| Branco sobre laranja | ≈ 3,4:1 | **só texto grande** (≥ 24px, ou ≥ 18,66px em negrito) e ícones |
-| Laranja sobre `#f7f7f7` | ≈ 3,1:1 | **só** elementos grandes/decorativos, nunca texto pequeno |
+| Navy on `#f7f7f7` | ≈ 15:1 | any text |
+| Navy on orange | ≈ 4.8:1 | any text |
+| Orange on navy | ≈ 4.8:1 | any text |
+| White on orange | ≈ 3.4:1 | **large text only** (≥ 24px, or ≥ 18.66px bold) and icons |
+| Orange on `#f7f7f7` | ≈ 3.1:1 | large/decorative elements only, never small text |
 
-## Responsividade
+## Responsive
 
-- **Mobile-first**: estilos base para ~320–390px; ampliar com `min-width` (ex.: 640px, 768px, 1024px, 1280px)
-- Conteúdo com `max-width` (~1200px) centralizado; nada de rolagem horizontal em nenhuma largura
-- Texto alinhado à **esquerda** no mobile (o mockup usa justificado; só manter justificado em telas largas, se ficar bom)
-- Alvos de toque ≥ 44×44px; espaçamento confortável entre links/botões
-- Faixa de 5 etapas e linha do tempo: reorganizar para grade/lista vertical no mobile
-- Testar em 320, 390, 768, 1024 e 1440px
+- **Mobile-first**: base styles for ~320–390px; scale up with `min-width` (640, 768, 1024, 1280px).
+- Content `max-width` ~1200px centered; no horizontal scroll at any width.
+- Left-aligned text on mobile (the mockup's justified text only on wide screens, if at all).
+- Touch targets ≥ 44×44px. Sticky CTA must not cover content (add bottom padding) and must respect
+  `env(safe-area-inset-bottom)`.
+- Test at 320, 390, 768, 1024, 1440px — and inside Instagram's in-app browser.
 
-## Imagens e performance
+## Performance
 
-- Meta: **Lighthouse mobile ≥ 95** em Performance, Acessibilidade, Boas práticas e SEO; **LCP < 2,5s**, **CLS ≈ 0**
-- Imagem do hero: `loading="eager"` + `fetchpriority="high"`; todas as demais: `loading="lazy"`
-- Sempre definir `width`/`height` (ou usar dimensões inferidas pelo `astro:assets`) para evitar salto de layout
-- Formatos modernos (AVIF/WebP) via Astro; fotos nunca maiores que o necessário
-- Ícones e logo em **SVG**; mapa do Brasil em **SVG inline** com `<title>`
-- **Nunca** colocar texto dentro de imagem: todo texto é HTML real
-- Textura de papel do fundo: imagem pequena e otimizada, ou omitir se pesar; nunca bloquear o LCP
+- Target: **Lighthouse mobile ≥ 95** in all categories; **LCP < 2.5s**; **CLS ≈ 0**.
+- Hero image `loading="eager"` + `fetchpriority="high"`; everything else `loading="lazy"`.
+- Always set dimensions; AVIF/WebP via Astro; icons and logo as SVG; **never text inside images**.
 
-## SEO (obrigatório)
+## SEO (still required — local search matters)
 
-- `<html lang="pt-BR">`; `<title>` e `<meta name="description">` únicos e escritos para São Carlos/energia solar
-- `canonical`, Open Graph e Twitter Card; imagem OG em `public/`
-- **JSON-LD** (`LocalBusiness`/`Organization`) com dados vindos de `src/data/site.ts`
-- `@astrojs/sitemap` + `public/robots.txt`; `site` configurado em `astro.config.mjs`
-- **Um único `<h1>`** (no hero) e hierarquia de títulos sem pular níveis
-- HTML semântico (`header`, `main`, `section`, `nav`, `footer`, `address`); `alt` descritivo em toda imagem informativa
-  (`alt=""` nas decorativas)
-- Links externos relevantes (redes, blog) com `rel` adequado; link do blog como link normal e rastreável
+- `<html lang="pt-BR">`; unique `<title>`/`description` about solar energy in São Carlos.
+- `canonical`, Open Graph and Twitter Card (the link preview in DMs/Stories matters); OG image in `public/`.
+- JSON-LD `LocalBusiness` from `src/data/site.ts` + `FAQPage` from `src/data/faq.ts`.
+- `@astrojs/sitemap` + `public/robots.txt`; `site` set in `astro.config.mjs`.
+- **Exactly one `<h1>`** (hero); no skipped heading levels; semantic HTML; descriptive `alt` (`alt=""` if decorative).
 
-## Acessibilidade
+## Accessibility
 
-- Navegação por teclado e foco visível em tudo que é interativo
-- Botões são `<button>`/`<a>` de verdade; rótulos claros (`aria-label` em links só com ícone)
-- Respeitar `prefers-reduced-motion`; evitar animações que atrasem conteúdo
-- Carrossel de depoimentos: preferir `scroll-snap` em CSS; se houver controles, devem funcionar por teclado
+- Keyboard navigation and visible focus on everything interactive.
+- Real `<button>`/`<a>` elements; `aria-label` on icon-only links.
+- Respect `prefers-reduced-motion`. FAQ via `<details>/<summary>`. Carousels via CSS `scroll-snap`.
 
-## Conteúdo — regras de honestidade
+## Content honesty and LGPD
 
-- **Não inventar** números, depoimentos, nomes, certificações, preços ou prazos.
-- Dados da empresa vivem em `src/data/site.ts`; nenhum componente repete telefone/e-mail/endereço no texto
-- Textos repetidos/placeholder do mockup ("Monitoramento em um frase", "aaaa…", lorem repetido) **não** vão
-  para produção: marcar com `TODO(conteudo)`
-- Fotos de pessoas (fundadores, equipe, clientes) dependem de autorização de uso; manter fácil de trocar
+- **Never invent** numbers, testimonials, names, certifications, prices, deadlines or savings percentages.
+- Company data only in `src/data/site.ts`; components never hardcode phone/e-mail/address.
+- Mockup placeholders ("Monitoramento em um frase", "aaaa…", repeated lorem, empty logo boxes) never ship:
+  mark gaps with `TODO(conteudo): description`.
+- Fix mockup typos: "PROBRIA" → "PRÓPRIA", "Direiros" → "Direitos", "Eletrica" → "Elétrica"; copyright year automatic.
+- Photos/testimonials of people only with authorization; keep them easy to swap.
+- Be honest about response time ("respondemos no WhatsApp em até X") — only once Viktra defines X.
 
-## Código
+## Code
 
-- Um componente por seção, nome em `PascalCase`, props tipadas; dados repetitivos em arrays tipados
-- Classes CSS em `kebab-case`, semânticas; sem `!important`; sem estilos inline
-- Sem dependências novas sem aprovação; preferir plataforma web (HTML/CSS) a bibliotecas
-- Comentários só onde o "porquê" não é óbvio
+- One component per section, `PascalCase`, typed props; repeated content in typed arrays in `src/data/`.
+- CSS classes in semantic `kebab-case`; no `!important`; no inline styles.
+- No new dependencies without approval. Comments only where the "why" isn't obvious.
 
-## Fluxo de trabalho
+## Workflow
 
-1. **Ler** este arquivo e o(s) mockup(s) da seção em `design/mockup/` antes de escrever código
-2. Para tarefas maiores: propor um **plano curto** e esperar confirmação
-3. Implementar **uma seção por vez**, mobile-first, fiel ao mockup, sem mexer em arquivos fora do escopo
-4. Rodar `npm run build` (e `astro check`) e conferir sem erros
-5. Ao concluir: resumir o que mudou, o que foi corrigido do mockup e os `TODO(conteudo)` pendentes
-6. Commits pequenos, mensagens no padrão Conventional Commits (`feat:`, `fix:`, `style:`, `chore:`)
-7. Em dúvida sobre conteúdo, design ou escopo: **perguntar** em vez de supor
+1. Read this file and the relevant mockup in `design/mockup/` before writing code.
+2. Larger tasks: propose a short plan and wait for approval.
+3. One section at a time, mobile-first, without touching files outside the scope.
+4. Run `npm run build` (and `npx astro check`) with no errors.
+5. When done: summarize changes, mockup deviations, and pending `TODO(conteudo)` items.
+6. Small commits, Conventional Commits (`feat:`, `fix:`, `style:`, `chore:`, `docs:`).
+7. When unsure about content, design or scope: **ask**, don't assume.
