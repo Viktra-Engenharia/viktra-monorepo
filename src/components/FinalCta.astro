@@ -68,10 +68,7 @@ const whatsappUrl = getWhatsAppCtaUrl('final-cta');
               data-track-location="contact"
               aria-label={`WhatsApp da Viktra: ${site.contact.whatsappNumber}`}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4A8 8 0 1 1 20 11.5Z" />
-                <path d="M9 8.5c.4 2.8 2.1 4.5 4.9 5" />
-              </svg>
+              <span class="contact__icon-box"><WhatsAppIcon /></span>
               <span>{site.contact.whatsappNumber}</span>
             </a>
           </li>
@@ -214,6 +211,21 @@ const whatsappUrl = getWhatsAppCtaUrl('final-cta');
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 1.8;
+  }
+
+  /* Same 2rem slot as the outline icons; the filled glyph sits a bit smaller to match their weight. */
+  .contact__icon-box {
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contact__icon-box :global(.whatsapp-icon) {
+    width: 1.625rem;
+    height: 1.625rem;
   }
 
   .contact__icon-dot {

@@ -27,7 +27,9 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     <!-- TODO(conteudo): aprovar o título; combinar com o post/anúncio que leva ao site. -->
     <h1 class="hero__title" id="hero-title">Reduza sua conta de luz com energia solar</h1>
     <p class="hero__lead">
-      {site.slogan}. Projeto, instalação e pós-venda feitos por engenheiros, com registro no CREA-SP.
+      {site.slogan}.<span class="hero__lead-more"
+        >{' '}Projeto, instalação e pós-venda feitos por engenheiros, com registro no CREA-SP.</span
+      >
     </p>
     <div class="hero__actions">
       <a
@@ -137,6 +139,191 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     color: var(--color-orange);
   }
 
+  /*
+   * Mobile only: full-screen hero, short lead, and the simulator takes the orange button
+   * while WhatsApp becomes the text link below it. Wider screens keep the layout above.
+   */
+  @media (max-width: 639.98px) {
+    .hero {
+      min-height: max(36rem, 100svh);
+    }
+
+    .hero__lead-more {
+      display: none;
+    }
+
+    .hero__secondary {
+      order: 1;
+      min-height: 3rem;
+      padding: var(--space-3) var(--space-4);
+      background-color: var(--color-orange);
+      color: var(--color-navy);
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+    }
+
+    .hero__secondary:hover {
+      background-color: var(--color-white);
+      color: var(--color-navy);
+    }
+
+    .hero__cta {
+      order: 2;
+      min-height: 2.75rem;
+      padding: 0;
+      background-color: transparent;
+      color: var(--color-white);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+
+    .hero__cta:hover {
+      background-color: transparent;
+      color: var(--color-orange);
+    }
+  }
+
+  /*
+   * Page-load reveal: CSS only. Mobile is short and quick (Instagram scrollers); desktop is
+   * slower with a blur-in title and an underline. The photo only scales (never fades) so LCP
+   * isn't delayed.
+   */
+  .hero {
+    --hero-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --hero-rise: 0.75rem;
+    --hero-blur: 0;
+    --hero-step: 70ms;
+    --hero-duration: 0.55s;
+  }
+
+  .hero__image {
+    animation: hero-settle 1.6s var(--hero-ease) both;
+    --hero-zoom: 1.06;
+  }
+
+  .hero__logo,
+  .hero__kicker,
+  .hero__title,
+  .hero__lead,
+  .hero__actions {
+    animation: hero-rise var(--hero-duration) var(--hero-ease) both;
+    animation-delay: calc(var(--hero-i) * var(--hero-step));
+  }
+
+  .hero__logo {
+    --hero-i: 0;
+  }
+
+  .hero__kicker {
+    --hero-i: 1;
+  }
+
+  .hero__title {
+    --hero-i: 2;
+  }
+
+  .hero__lead {
+    --hero-i: 3;
+  }
+
+  .hero__actions {
+    --hero-i: 4;
+  }
+
+  @keyframes hero-settle {
+    from {
+      transform: scale(var(--hero-zoom));
+    }
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(var(--hero-rise));
+      filter: blur(var(--hero-blur));
+    }
+  }
+
+  @keyframes hero-shine {
+    from {
+      transform: translateX(-100%) skewX(-20deg);
+    }
+
+    to {
+      transform: translateX(250%) skewX(-20deg);
+    }
+  }
+
+  @keyframes hero-underline {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  /* Mobile: one light sweep across the orange button once it has landed. */
+  @media (max-width: 639.98px) {
+    .hero__secondary {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero__secondary::after {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 40%;
+      background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+      content: '';
+      pointer-events: none;
+      transform: translateX(-100%) skewX(-20deg);
+      animation: hero-shine 0.9s ease-in-out 0.85s both;
+    }
+  }
+
+  /* Desktop: slower, bigger moves, blur-in title and an orange underline drawn from the centre. */
+  @media (min-width: 768px) {
+    .hero {
+      --hero-rise: 1.5rem;
+      --hero-step: 110ms;
+      --hero-duration: 0.8s;
+    }
+
+    .hero__image {
+      --hero-zoom: 1.12;
+      animation-duration: 2.4s;
+    }
+
+    .hero__title {
+      --hero-blur: 6px;
+    }
+
+    .hero__title::after {
+      display: block;
+      width: 4rem;
+      height: 0.25rem;
+      margin: var(--space-4) auto 0;
+      background-color: var(--color-orange);
+      content: '';
+      animation: hero-underline 0.7s var(--hero-ease) 0.75s both;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__image,
+    .hero__logo,
+    .hero__kicker,
+    .hero__title,
+    .hero__lead,
+    .hero__actions,
+    .hero__title::after,
+    .hero__secondary::after {
+      animation: none;
+    }
+
+    .hero__secondary::after {
+      display: none;
+    }
+  }
+
   @media (min-width: 640px) {
     .hero__actions {
       width: auto;
@@ -146,10 +333,15 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     }
   }
 
+  /*
+   * Desktop: hero fills the viewport. Sizes and gaps scale with min(vw, vh) so the block stays
+   * balanced on short laptop screens as well as tall monitors.
+   */
   @media (min-width: 768px) {
     .hero {
-      min-height: clamp(40rem, 58vw, 50rem);
-      padding-block: var(--space-8);
+      min-height: max(36rem, 100vh);
+      min-height: max(36rem, 100svh);
+      padding-block: clamp(var(--space-7), 8vh, var(--space-8));
     }
 
     .hero__content {
@@ -158,20 +350,38 @@ const whatsappUrl = getWhatsAppCtaUrl('hero');
     }
 
     .hero__logo {
-      width: min(50vw, 26rem);
+      width: clamp(14rem, min(32vw, 42vh), 30rem);
+      margin-bottom: clamp(var(--space-6), 7vh, 5rem);
+    }
+
+    .hero__kicker {
+      margin-bottom: clamp(var(--space-3), 2.2vh, var(--space-5));
+      font-size: clamp(0.875rem, min(1.1vw, 1.9vh), 1.125rem);
+      letter-spacing: 0.14em;
     }
 
     .hero__title {
-      max-width: 22ch;
-      font-size: var(--text-3xl);
+      max-width: 20ch;
+      font-size: clamp(2.5rem, min(5.2vw, 8.5vh), 5.75rem);
+      line-height: 1.04;
+    }
+
+    .hero__lead {
+      max-width: 46ch;
+      margin-top: clamp(var(--space-4), 3vh, var(--space-6));
+      font-size: clamp(1.0625rem, min(1.35vw, 2.3vh), 1.375rem);
+      line-height: 1.55;
+      opacity: 0.9;
     }
 
     .hero__actions {
+      margin-top: clamp(var(--space-6), 6vh, 4.5rem);
       justify-content: center;
     }
 
     .hero__cta {
       min-height: 3.5rem;
+      padding-inline: var(--space-7);
       font-size: var(--text-lg);
     }
   }
