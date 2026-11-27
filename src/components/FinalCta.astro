@@ -110,6 +110,19 @@ const whatsappUrl = getWhatsAppCtaUrl('final-cta');
 </section>
 
 <style>
+  /* On full-height screens the orange band absorbs the extra space; contact stays at the bottom. */
+  @media (min-width: 768px) {
+    .final-cta {
+      grid-template-rows: 1fr auto;
+      align-content: stretch;
+    }
+
+    .final-cta__band {
+      display: grid;
+      align-content: center;
+    }
+  }
+
   .final-cta__band {
     padding-block: var(--space-8);
     background-color: var(--color-orange);

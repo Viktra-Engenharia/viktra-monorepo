@@ -1,8 +1,9 @@
 :root {
   color-scheme: light;
   --color-navy: #0e1e48;
-  --color-orange: #fc4f00;
+  --color-orange: #F26F21;
   --color-bg: #f7f7f7;
+  --color-bg-alt: #e8ebf1; /* navy-tinted gray: alternates with white to separate sections */
   --color-white: #ffffff;
 
   --font-heading: "Oswald", sans-serif;
@@ -74,6 +75,16 @@ a {
 .container {
   width: min(100% - var(--page-gutter) * 2, var(--content-width));
   margin-inline: auto;
+}
+
+/* Each section fills the screen on tablet/desktop; mobile keeps natural height for a short scroll. */
+@media (min-width: 768px) {
+  main > section {
+    display: grid;
+    min-height: 100vh;
+    min-height: 100svh;
+    align-content: center;
+  }
 }
 
 /* Section heading with the orange underline from the mockup. */
